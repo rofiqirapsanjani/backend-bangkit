@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const User = require("../models/User");
 const {
   verifyToken,
   verifyTokenAndAuthorization,
@@ -9,19 +10,25 @@ const  router = require("express").Router();
 
 //CREATE
 
-router.post("/", verifyTokenAndAdmin, async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const newProduct = new Product(req.body);
+//  if(User.findById(newProduct.userId)){
 
-  try {
-    const savedProduct = await newProduct.save();
-    res.status(200).json(savedProduct);
-  } catch (err) {
-    res.status(500).json(err);
+ try {
+      const savedProduct = await newProduct.save();
+      res.status(200).json(savedProduct);
+    } catch (err) {
+       res.status(500).json(err);
+    } 
   }
-});
+  // else {
+  //   res.status(404).json("user not found");
+  // }
+  // }
+);
 
 //UPDATE
-router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
@@ -37,7 +44,8 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
+
   try {
     await Product.findByIdAndDelete(req.params.id);
     res.status(200).json("Product has been deleted...");
@@ -47,7 +55,25 @@ router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //GET PRODUCT
-router.get("/find/:id", async (req, res) => {
+// router.get("/find/:id", async (req, res) => {
+//   try {
+//     const product = await Product.findById(req.params.id);
+//     res.status(200).json(product);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
+//GET USER Product
+router.get("/find/:userId", verifyToken, async (req, res) => {
+  try {
+    const products = await Product.find({ userId: req.params.userId });
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+//GET PRODUCT
+router.get("/find/product/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     res.status(200).json(product);

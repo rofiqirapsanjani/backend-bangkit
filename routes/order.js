@@ -1,4 +1,5 @@
 const Order = require("../models/Order");
+const User = require("../models/User");
 const {
   verifyToken,
   verifyTokenAndAuthorization,
@@ -11,14 +12,19 @@ const router = require("express").Router();
 
 router.post("/", verifyToken, async (req, res) => {
   const newOrder = new Order(req.body);
-
-  try {
-    const savedOrder = await newOrder.save();
-    res.status(200).json(savedOrder);
-  } catch (err) {
-    res.status(500).json(err);
+  // if(User.findById(newOrder.userId)){
+     try {
+      const savedOrder = await newOrder.save();
+      res.status(200).json(savedOrder);
+    } catch (err) {
+       res.status(500).json(err);
+    }
   }
-});
+  // else{
+  //   res.status(404).json("user not found");
+  // }
+  // }
+);
 
 //UPDATE
 router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
@@ -37,14 +43,14 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
-  try {
-    await Order.findByIdAndDelete(req.params.id);
-    res.status(200).json("Order has been deleted...");
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+// router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+//   try {
+//     await Order.findByIdAndDelete(req.params.id);
+//     res.status(200).json("Order has been deleted...");
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 //GET USER ORDERS
 router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
@@ -58,14 +64,14 @@ router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
 
 // //GET ALL
 
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
-  try {
-    const orders = await Order.find();
-    res.status(200).json(orders);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+// router.get("/", verifyTokenAndAdmin, async (req, res) => {
+//   try {
+//     const orders = await Order.find();
+//     res.status(200).json(orders);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 // GET MONTHLY INCOME
 
