@@ -10,7 +10,7 @@ const  router = require("express").Router();
 
 //CREATE
 
-router.post("/", verifyToken, async (req, res) => {
+router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
   const newProduct = new Product(req.body);
 //  if(User.findById(newProduct.userId)){
 
@@ -28,10 +28,10 @@ router.post("/", verifyToken, async (req, res) => {
 );
 
 //UPDATE
-router.put("/:id", verifyToken, async (req, res) => {
+router.put("/:id/:productId", verifyTokenAndAuthorization, async (req, res) => {
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
+      req.params.productId,
       {
         $set: req.body,
       },
@@ -44,10 +44,10 @@ router.put("/:id", verifyToken, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyToken, async (req, res) => {
+router.delete("/:id/:productId", verifyTokenAndAuthorization, async (req, res) => {
 
   try {
-    await Product.findByIdAndDelete(req.params.id);
+    await Product.findByIdAndDelete(req.params.productId);
     res.status(200).json("Product has been deleted...");
   } catch (err) {
     res.status(500).json(err);
@@ -63,7 +63,10 @@ router.delete("/:id", verifyToken, async (req, res) => {
 //     res.status(500).json(err);
 //   }
 // });
+
+
 //GET USER Product
+// menampilkan produk yang dijual berdasarkan userId(atau toko)
 router.get("/find/:userId", verifyToken, async (req, res) => {
   try {
     const products = await Product.find({ userId: req.params.userId });
@@ -73,7 +76,8 @@ router.get("/find/:userId", verifyToken, async (req, res) => {
   }
 });
 //GET PRODUCT
-router.get("/find/product/:id", async (req, res) => {
+// pas di klik
+router.get("/find/product/:id", verifyToken, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     res.status(200).json(product);
@@ -83,6 +87,7 @@ router.get("/find/product/:id", async (req, res) => {
 });
 
 //GET ALL PRODUCTS
+// halaman homepage untu menampilkan semua produk
 router.get("/", async (req, res) => {
   const qNew = req.query.new;
   const qCategory = req.query.category;
