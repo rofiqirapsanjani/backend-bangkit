@@ -67,9 +67,9 @@ router.delete("/:id/:productId", verifyTokenAndAuthorization, async (req, res) =
 
 //GET USER Product
 // menampilkan produk yang dijual berdasarkan userId(atau toko)
-router.get("/find/:userId", verifyToken, async (req, res) => {
+router.get("/find/:sellerId", verifyToken, async (req, res) => {
   try {
-    const products = await Product.find({ userId: req.params.userId });
+    const products = await Product.find({ sellerId: req.params.sellerId });
     res.status(200).json(products);
   } catch (err) {
     res.status(500).json(err);
@@ -78,6 +78,7 @@ router.get("/find/:userId", verifyToken, async (req, res) => {
 //GET PRODUCT
 // pas di klik
 router.get("/find/product/:id", verifyToken, async (req, res) => {
+  // id = objectId
   try {
     const product = await Product.findById(req.params.id);
     res.status(200).json(product);

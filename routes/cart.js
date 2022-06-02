@@ -9,8 +9,9 @@ const router = require("express").Router();
 
 //CREATE
 
-router.post("/", verifyToken, async (req, res) => {
+router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
   const newCart = new Cart(req.body);
+  newCart.userId = req.params.id;
 
   try {
     const savedCart = await newCart.save();
@@ -21,10 +22,10 @@ router.post("/", verifyToken, async (req, res) => {
 });
 
 //UPDATE
-router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.put("/:id/:cartId", verifyTokenAndAuthorization, async (req, res) => {
   try {
     const updatedCart = await Cart.findByIdAndUpdate(
-      req.params.id,
+      req.params.cartId,
       {
         $set: req.body,
       },
@@ -37,9 +38,9 @@ router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
+router.delete("/:id/:cartId", verifyTokenAndAuthorization, async (req, res) => {
   try {
-    await Cart.findByIdAndDelete(req.params.id);
+    await Cart.findByIdAndDelete(req.params.cartId);
     res.status(200).json("Cart has been deleted...");
   } catch (err) {
     res.status(500).json(err);
@@ -47,9 +48,11 @@ router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
 });
 
 //GET USER CART
-router.get("/find/:userId", verifyTokenAndAuthorization, async (req, res) => {
+// pembeli ingin melihat isi keranjangnya
+router.get("/find/:id", verifyTokenAndAuthorization, async (req, res) => {
+  // userId = id(pembeli)
   try {
-    const cart = await Cart.findOne({ userId: req.params.userId });
+    const cart = await Cart.findOne({ userId: req.params.id });
     res.status(200).json(cart);
   } catch (err) {
     res.status(500).json(err);
