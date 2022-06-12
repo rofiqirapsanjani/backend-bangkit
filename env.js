@@ -5,7 +5,7 @@ const client = new MongoClient(uri);
 async function run() {
   try {
     await client.connect();
-    const database = client.db("thriftee");
+    const database = client.db("Bangkit");
     const ratings = database.collection("users");
     const cursor = ratings.find();
     await cursor.forEach(doc => console.dir(doc));

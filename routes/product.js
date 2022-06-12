@@ -12,8 +12,7 @@ const  router = require("express").Router();
 
 router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
   const newProduct = new Product(req.body);
-//  if(User.findById(newProduct.userId)){
-
+  
  try {
       const savedProduct = await newProduct.save();
       res.status(200).json(savedProduct);
@@ -21,10 +20,7 @@ router.post("/:id", verifyTokenAndAuthorization, async (req, res) => {
        res.status(500).json(err);
     } 
   }
-  // else {
-  //   res.status(404).json("user not found");
-  // }
-  // }
+
 );
 
 //UPDATE
@@ -54,15 +50,7 @@ router.delete("/:id/:productId", verifyTokenAndAuthorization, async (req, res) =
   }
 });
 
-//GET PRODUCT
-// router.get("/find/:id", async (req, res) => {
-//   try {
-//     const product = await Product.findById(req.params.id);
-//     res.status(200).json(product);
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+
 
 
 //GET USER Product

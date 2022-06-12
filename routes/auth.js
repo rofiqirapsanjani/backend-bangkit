@@ -18,8 +18,8 @@ router.post("/register", async (req, res) => {
     console.log(savedUser)
     res.status(201).json(savedUser);
   } catch (err) {
-    console.log('failed to register')
-    // res.status(500).json(err);
+    console.log(err)
+     res.status(500).json(err);
   }
 });
 

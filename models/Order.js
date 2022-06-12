@@ -4,21 +4,12 @@ const OrderSchema = new mongoose.Schema(
   {
     userId: { type: String, required: true },
     sellerId : { type: String, required: true},
-
-    products: [
-      {
-        productId: {
-          type: String,
-        },
-        quantity: {
-          type: Number,
-          default: 1,
-        },
-      },
-    ],
+    productId : {type: String, required : true},
     amount: { type: Number, required: true },
-    address: { type: Object, required: true },
+    address: { type: String, required: true },
     status: { type: String, default: "pending" },
+    img : {type : String, required : true},
+    title : {type : String, required : true}
   },
   { timestamps: true }
 );
